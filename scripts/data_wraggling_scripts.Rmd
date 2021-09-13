@@ -1,0 +1,48 @@
+---
+title: "Visit Scotland Tourism Analysis"
+author: "Barry O Dea"
+date: "13/09/2021"
+output: html_document
+---
+
+
+# Read in the data and explore
+```{r}
+library(tidyverse)
+library(janitor)
+library(here)
+```
+
+```{r}
+regional_domestic_tourism <- read_csv(here("raw_data/regional_domestic_tourism.csv")) %>% 
+  clean_names()
+accomm_occupancy <- read_csv(here("raw_data/scottish_accomodation_occupancy.csv")) %>% 
+  clean_names()
+day_visit_activities <- read_csv(here("raw_data/tourism_day_visits_activities.csv")) %>% 
+  clean_names()
+day_visit_demographics <- read_csv(here("raw_data/tourism_day_visits_demographics.csv")) %>% 
+  clean_names()
+day_visit_location <- read_csv(here("raw_data/tourism_day_visits_location.csv")) %>% 
+  clean_names()
+day_visit_tramsport <- read_csv(here("raw_data/tourism_day_visits_transport.csv")) %>% 
+  clean_names()
+location_data <- read_csv(here("raw_data/Datazone2011lookup.csv")) %>% 
+  clean_names()
+
+```
+
+# Look at the data for the first question on activities creating the most income
+```{r}
+glimpse(day_visit_activities)
+
+unique(day_visit_activities$breakdown_of_domestic_tourism)
+```
+
+```{r}
+day_visit_activities %>% 
+  rename(year = date_code) %>% 
+  filter(breakdown_of_domestic_tourism == "Expenditure") %>% 
+  group_by(tourism_activity, year) %>% 
+  mutate(expenditure_in_millions = sum(value)) 
+```
+
