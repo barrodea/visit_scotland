@@ -155,7 +155,7 @@ accomm_occupancy%>%
   group_by(accommodation_type_and_occupancy, weekday_weekend, size_of_accommodation, location,) %>% 
   summarise(sum = sum(value)) %>% 
   ggplot() +
-  geom_col(aes(x = reorder(accommodation_type_and_occupancy, sum), y = sum, fill = size_of_accommodation), position = "dodge") +
+  geom_col(aes(x = reorder(accommodation_type_and_occupancy, sum), y = sum, fill = size_of_accommodation), position = "dodge", colour = "white") +
   theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
 ```
 
@@ -166,7 +166,7 @@ accomm_occupancy%>%
   group_by(accommodation_type_and_occupancy, weekday_weekend, size_of_accommodation, location,) %>% 
   summarise(sum = sum(value)) %>% 
   ggplot() +
-  geom_col(aes(x = reorder(accommodation_type_and_occupancy, -sum), y = sum, fill = location), position = "dodge") +
+  geom_col(aes(x = reorder(accommodation_type_and_occupancy, -sum), y = sum, fill = location), position = "dodge", colour = "white") +
   theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
 ```
 
@@ -193,7 +193,8 @@ library(sf)
 visits_la_geo %>% 
           drop_na(area_visited) %>% 
           filter(region_of_residence != "All of GB",
-                 units == "million pounds (GBP)") %>% 
+                 units == "million pounds (GBP)",
+                 date_code == "2017-2019")%>% 
           ggplot() +
           geom_sf(aes(fill = value), colour = "black") +
           theme(axis.text.x = element_text(face = "bold", size = 10),
@@ -202,8 +203,190 @@ visits_la_geo %>%
                 axis.title=element_text(size=12),
                 legend.position = "bottom",
                 legend.text = element_text(size = "8")) +
-           scale_fill_viridis_c(option="viridis")
+           scale_fill_viridis_c(option="viridis") +
+           labs(title = "Expenditure by local area",
+               subtitle = "2017-2019",
+               fill = "GBP in millions")
+```
+
+# Demographics
+```{r}
+day_visit_demographics <- read_csv(here("raw_data/tourism_day_visits_demographics.csv")) %>% 
+  clean_names()
+```
+
+```{r}
+ day_visit_demographics %>% 
+  filter(age != "All",
+         date_code == "2019") %>% 
+  group_by(age, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(age, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(marital_status != "All",
+         date_code == "2019") %>% 
+  group_by(marital_status, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(marital_status, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(gender != "All",
+         date_code == "2019") %>% 
+  group_by(gender, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(gender, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(employment_status != "All",
+         date_code == "2019") %>% 
+  group_by(employment_status, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(employment_status, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(children != "All",
+         date_code == "2019") %>% 
+  group_by(children, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(children, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(access_to_car != "All",
+         date_code == "2019") %>% 
+  group_by(access_to_car, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(access_to_car, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(social_grade != "All",
+         date_code == "2019") %>% 
+  group_by(social_grade, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(social_grade, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+demographics_long <- day_visit_demographics %>% 
+  pivot_longer(cols = c(age:social_grade), names_to = "category", values_to = "status") %>% 
+  filter(status != "All") %>% 
+  arrange(date_code, breakdown_of_domestic_tourism, category)
+```
+
+```{r}
+demographics_long %>% 
+  group_by(date_code, category, status, breakdown_of_domestic_tourism) %>% 
+  summarise(sum = sum(value))
+```
+
+# Activities
+```{r}
+day_visit_activities <- read_csv(here("raw_data/tourism_day_visits_activities.csv")) %>% 
+  clean_names()
+```
+```{r}
+day_visit_activities %>% 
+  group_by(date_code, tourism_activity, breakdown_of_domestic_tourism) %>% 
+  summarise(sum = sum(value))
+
+day_visit_activities %>% 
+  distinct(tourism_activity)
+```
+
+```{r}
+day_visit_activities %>% 
+  filter(tourism_activity %in% c("Went out for a meal", "Visited friends or family for leisure", "Shopping for items that you do not regularly buy", "Night out to a bar, pub and/or club", "Outdoor leisure activities e.g. walking, golf", "General day out/ to explore an area"),
+         units == "Million Visits") %>% 
+  group_by(tourism_activity, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(tourism_activity, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_activities %>% 
+  filter(tourism_activity %in% c("Went out for a meal", "Visited friends or family for leisure", "Shopping for items that you do not regularly buy", "Night out to a bar, pub and/or club", "Outdoor leisure activities e.g. walking, golf", "General day out/ to explore an area"),
+         units == "million pounds (GBP)") %>% 
+  group_by(tourism_activity, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = reorder(tourism_activity, -sum), y = sum, fill = units), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+day_visit_activities %>% 
+  filter( units == "Million Visits") %>% 
+  group_by(date_code, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_line(aes(x = date_code, y = sum, colour = units))
+```
+
+```{r}
+day_visit_activities %>% 
+  filter( units == "million pounds (GBP)") %>% 
+  group_by(date_code, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_line(aes(x = date_code, y = sum, colour = units))
 ```
 
 
+```{r}
+regional_visits %>% 
+  drop_na(area_visited) %>% 
+  group_by(date_code) %>% 
+  filter(region_of_residence != "All of GB") %>% 
+  mutate(units = fct_reorder(units, desc(value))) %>% 
+  ggplot() +
+  geom_col(aes(x = date_code, y = value, fill = region_of_residence), position = "dodge") +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+
+```{r}
+regional_visits %>% 
+   filter( units == "Thousand Visits") %>% 
+  group_by(date_code, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = date_code, y = sum))
+```
+
+```{r}
+regional_visits %>% 
+   filter( units == "million pounds (GBP)") %>% 
+  group_by(date_code, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_col(aes(x = date_code, y = sum))
+```
 
