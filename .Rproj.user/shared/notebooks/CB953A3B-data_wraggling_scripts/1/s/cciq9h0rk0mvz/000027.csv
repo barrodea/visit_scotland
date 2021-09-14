@@ -1,5 +1,0 @@
-"0","day_visit_activities %>% "
-"0","  rename(year = date_code) %>% "
-"0","  filter(breakdown_of_domestic_tourism == ""Expenditure"") %>% "
-"0","  group_by(tourism_activity, year) %>% "
-"0","  mutate(expenditure_in_millions = sum(value)) "
