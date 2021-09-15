@@ -1,0 +1,190 @@
+---
+title: "Untitled"
+author: "Barry O Dea"
+date: "15/09/2021"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(modelr)
+library(ggfortify)
+# visualisation packages
+library(GGally)
+```
+
+
+
+
+# Building a model to predict tourist visits from touirst demographics
+
+## convert the data in to a long version where the variables are converted to columns for category and status
+```{r}
+demographics_long <- day_visit_demographics %>% 
+  pivot_longer(cols = c(age:social_grade), names_to = "category", values_to = "status") %>% 
+  arrange(date_code, breakdown_of_domestic_tourism, category)
+
+demographics_long 
+```
+
+## Add the percentages of visits per category per year
+```{r}
+demographic_percent <- demographics_long %>% 
+  filter(units == "Million Visits",
+         status != "All") %>% 
+  group_by(date_code, category) %>% 
+  mutate(total_visits = sum(value)) %>% 
+  mutate(percentage = value/total_visits) %>% 
+  ungroup()
+```
+
+
+## Spred the data back out so that there is a line per year with all the proportions for each category on one line
+```{r}
+demographics_wide <- demographic_percent %>% 
+  unite("category_status" , c(category, status)) %>% 
+  select(date_code, category_status, percentage) %>% 
+  pivot_wider(names_from = category_status, values_from = percentage) 
+```
+
+## calculate the total visits per year
+```{r}
+total_visits <- day_visit_demographics %>% 
+  filter(units == "Million Visits",
+         age == "All",
+         marital_status == "All",
+         gender == "All",
+         employment_status == "All",
+         children == "All",
+         access_to_car == "All",
+         social_grade == "All") %>% 
+  group_by(date_code) %>% 
+  summarise(total_visits = sum(value))
+```
+
+## Add the total per year to data to be used for the model
+```{r}
+demographics_model_data <- demographics_wide %>% 
+  left_join(total_visits, "date_code") %>% 
+  clean_names()
+```
+
+## look at the correlations between the data and the response of number of visits
+```{r}
+demographics_model_data %>% 
+ggpairs(c(1:10, 23))
+```
+
+ - Here access to a car and age 45-54 look the highest correlated to total visits
+ 
+```{r}
+demographics_model_data %>% 
+ggpairs(c(10:16, 23))
+```
+ - all employments status have a similar correlation and gender has a low correlation
+
+```{r}
+demographics_model_data %>% 
+ggpairs(c(17:23))
+```
+ - Her marital status and social grade c2 have the highest correlations
+ 
+ ## select the columns that look like they have the highest correlation for the model building
+
+```{r}
+demographics_model_subset <- demographics_model_data %>% 
+  mutate(date_code = as.factor(date_code)) %>% 
+  select(c(access_to_car_access_to_car_1,  age_45_54_years, 
+    children_yes_children, employment_status_in_full_or_part_time_education, marital_status_married, social_grade_c2, total_visits))
+  
+```
+
+## Begin looking for the best initial predictor
+```{r}
+model1 <- lm(total_visits ~ access_to_car_access_to_car_1, data = demographics_model_subset)
+summary(model1)
+``` 
+
+- access to cars explains 68% of the response and has a significant p-value
+
+```{r}
+model1a <- lm(total_visits ~ marital_status_married, data = demographics_model_subset)
+summary(model1a)
+
+```
+- marital status only explains 40% of the response and p_value is not significant 
+
+```{r}
+model1b <- lm(total_visits ~ social_grade_c2, data = demographics_model_subset)
+summary(model1b)
+```
+- marital status only explains 40% of the response and p-value is not significant
+
+```{r}
+autoplot(model1)
+```
+ - This graphs indicate that model1 is an ok model to use.
+
+
+## Access to cars was the best predictor so now we look for the second best predictor
+```{r}
+model2a <- lm(total_visits ~ access_to_car_access_to_car_1 + marital_status_married, data = demographics_model_subset)
+summary(model2a)
+```
+
+
+```{r}
+
+model2b <- lm(total_visits ~ access_to_car_access_to_car_1 + employment_status_in_full_or_part_time_education, data = demographics_model_subset)
+summary(model2b)
+```
+ - best 2nd predictor is the marital status. Percentage explained goes up to 83% and it is close to the significance threshold. 
+
+```{r}
+model3a <- lm(total_visits ~ access_to_car_access_to_car_1 + marital_status_married + employment_status_in_full_or_part_time_education, data = demographics_model_subset)
+summary(model3a)
+```
+
+ - here the explained percentage goes up to 94% but the p_value is not significant. This may now be getting into the area of over-fitting the data and I will stop here
+
+```{r}
+library(ggfortify)
+autoplot(model3a)
+```
+
+
+
+# Check what an automated model would look like 
+```{r}
+library(leaps)
+```
+
+
+## run the automated generated model
+```{r}
+regsubsets_forward <- regsubsets(total_visits ~ ., data = demographics_model_subset, nvmax = 6, method = "forward")
+regsubsets_forward
+```
+
+
+##identify which predictors should be used in what order. From below you can see that access to cars, marital status and employment status are the top predictors as in the manual model.
+```{r}
+sum_regsubsets_forward <- summary(regsubsets_forward)
+sum_regsubsets_forward
+```
+
+
+```{r}
+sum_regsubsets_forward$which
+```
+
+
+## Look for over fitting in the model. The Adjusted R-square graph and the bic graph below indicate that at most 3 predicotrs is enough for this model.
+```{r}
+plot(sum_regsubsets_forward$rsq, type = "b")
+```
+
+```{r}
+plot(sum_regsubsets_forward$bic, type = "b")
+```
+
+## Conclusion: the best three predictors in a model to predict number of visits to Scotland are access to car, marital status and employment status.

@@ -67,7 +67,6 @@ day_visit_activities_visits_clean <-  day_visit_activities %>%
 ```{r}
 demographics_long <- day_visit_demographics %>% 
   pivot_longer(cols = c(age:social_grade), names_to = "category", values_to = "status") %>% 
-  filter(status != "All") %>% 
   arrange(date_code, breakdown_of_domestic_tourism, category)
 
 demographics_long 
@@ -97,34 +96,34 @@ demographics_long %>%
   ggpairs()
 ```
 ```{r}
-glimpse(demographics_visist)
+glimpse(demographics_visit)
 ```
 
 
 ```{r}
-demographics_visist <- demographics_long %>% 
+demographics_visit <- demographics_long %>% 
   select(-c("date_code", "feature_code", "measurement")) %>% 
   mutate(units = as.factor(units),
          breakdown_of_domestic_tourism = as.factor(breakdown_of_domestic_tourism),
          category = as.factor(category),
-         status = as.factor(category)) %>% 
+         status = as.factor(status)) %>% 
   filter(breakdown_of_domestic_tourism == "Visits")
 ```
 
 ```{r}
 library(leaps)
 
-regsubsets_forward <- regsubsets(value ~ ., data = demographics_visist, method = "forward")
+regsubsets_forward <- regsubsets(value ~ ., data = demographics_visit, method = "forward")
 ```
 
 ```{r}
-demographics_visist %>% 
+demographics_visit %>% 
   ggpairs()
 ```
 
 ```{r}
-mod1a <- lm(value ~ category, data = demographics_visist)
-mod1a
+mod1a <- lm(value ~ status, data = demographics_visit)
+summary(mod1a)
 ```
 
 ```{r}
@@ -157,9 +156,16 @@ visits_demographics %>%
 
 
 ```{r}
-mod1a <- lm(value ~ age + access_to_car + children, data = visits_demographics)
+mod1a <- lm(value ~ age + gender + access_to_car, data = visits_demographics)
 summary(mod1a)
 ```
+```{r}
+library(ggfortify)
+
+autoplot(mod1a)
+```
+
+
 
 ```{r}
 exp_demographics <- day_visit_demographics %>% 
@@ -190,7 +196,7 @@ sum_regsubsets_forward1
 
 
 ```{r}
-mod1a <- lm(value ~ age, data = exp_demographics)
+mod1a <- lm(value ~ access_to_car, data = exp_demographics)
 summary(mod1a)
 ```
 
@@ -236,6 +242,9 @@ regsubsets_forward <- regsubsets(value ~ tourism_activity, data = activites_trim
 regsubsets_forward 
 ```
 
+```{r}
+autoplot()
+```
 
 ```{r}
 sum_regsubsets_forward <- summary(regsubsets_forward)
@@ -248,5 +257,43 @@ plot(sum_regsubsets_forward$rsq, type = "b")
 ```{r}
 activites_trim %>% 
   summarise_all(funs(sum(is.na(.))))
+```
+
+```{r}
+age_total <- day_visit_demographics %>% 
+  select(-c(marital_status:social_grade, measurement, breakdown_of_domestic_tourism, feature_code)) %>% 
+  group_by(date_code, age,  units) %>% 
+  summarise(percent= value/sum(value)) 
+
+ age_total
+```
+
+```{r}
+day_visit_demographics %>% 
+  filter(date_code == 2013,
+         )
+```
+
+```{r}
+activities_wide <-  day_visit_activities %>% 
+  pivot_wider(names_from = breakdown_of_domestic_tourism, values_from = value) %>% 
+  clean_names() %>% 
+  mutate(expenditure = replace(expenditure,is.na(expenditure),0),
+         visits = replace(visits,is.na(visits),0))
+```
+
+```{r}
+activities_wide %>% 
+  group_by(date_code, tourism_activity) %>% 
+  summarise(sum_expend = sum(expenditure),
+            sum_visits = sum(visits)) %>% 
+  filter(tourism_activity != "All") %>% 
+  ggpairs()
+
+```
+
+
+```{r}
+
 ```
 

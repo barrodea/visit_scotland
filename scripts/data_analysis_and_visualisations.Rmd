@@ -20,7 +20,7 @@ top_expenditure <- day_visit_activities %>%
   rename(year = date_code) %>% 
   filter(breakdown_of_domestic_tourism == "Expenditure",
          tourism_activity != "All") %>% 
-  group_by(tourism_activity, year) %>% 
+  group_by(tourism_activity) %>% 
   summarise(expenditure_in_millions = sum(value))
 
 top_expenditure %>% 
@@ -45,12 +45,30 @@ day_visit_activities_clean %>%
 ```
 
 ```{r}
-top_expenditure %>% 
-  group_by(tourism_activity) %>% 
+day_visit_activities_clean %>% 
+  group_by(year) %>% 
   summarise(expenditure_in_millions = sum(expenditure_in_millions)) %>% 
-  mutate(tourism_activity = fct_reorder(tourism_activity, desc(expenditure_in_millions))) %>% 
   ggplot() + 
-  geom_col(aes(x = tourism_activity, y = expenditure_in_millions)) +
+  geom_line(aes(x = year, y = expenditure_in_millions)) +
+  theme(axis.text.x = element_text(size = 7, face = "bold", angle = 45, hjust = 1, vjust = 1))
+```
+
+```{r}
+top_visits <- day_visit_activities %>% 
+  rename(year = date_code) %>% 
+  filter(breakdown_of_domestic_tourism == "Visits",
+         tourism_activity != "All") %>% 
+  group_by(tourism_activity) %>% 
+  summarise(visits = sum(value))
+```
+
+```{r}
+top_visits %>% 
+  group_by(tourism_activity) %>% 
+  summarise(visits = sum(visits)) %>% 
+  mutate(tourism_activity = fct_reorder(tourism_activity, desc(visits))) %>% 
+  ggplot() + 
+  geom_col(aes(x = tourism_activity, y = visits)) +
   theme(axis.text.x = element_text(size = 7, face = "bold", angle = 45, hjust = 1, vjust = 1))
 ```
 
