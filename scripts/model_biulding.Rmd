@@ -38,7 +38,7 @@ demographic_percent <- demographics_long %>%
 ```
 
 
-## Spred the data back out so that there is a line per year with all the proportions for each category on one line
+## Spread the data back out so that there is a line per year with all the proportions for each category on one line
 ```{r}
 demographics_wide <- demographic_percent %>% 
   unite("category_status" , c(category, status)) %>% 
