@@ -64,15 +64,15 @@ day_visit_activities %>%
   theme_minimal() +
   theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
         legend.position = "top",
-        axis.text.y = element_text(face = "bold", size = 10),
-        title =element_text(size=12, face='bold'),
-        axis.title=element_text(size=20)) +
-  labs(x = "",
-       y = "",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Activity",
+       y = "Millions",
        fill = "",
        title = "Top Tourist Activities",
        subtitle = "2013 - 2019") +
-  scale_fill_manual(values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
  ## Plot the highest ranking activities by visits only
 ```{r}
@@ -91,10 +91,9 @@ day_visit_activities %>%
         legend.position = "top",
         axis.text.y = element_text(face = "bold", size = 10),
         title =element_text(size=12, face='bold'),
-        axis.title=element_text(size=10)) +
-  labs(x = "",
-       y = "No. of Visits (m)",
-       colour = "",
+        axis.title=element_text(size=12)) +
+  labs(x = "Activity",
+       y = "No. of Visits (m)\n",
        title = "Top Tourist Activities by Visits",
        subtitle = "2013 - 2019") +
   scale_x_discrete(labels= activity_names_visits)
@@ -118,7 +117,18 @@ day_visit_demographics <- read_csv(here("raw_data/tourism_day_visits_demographic
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(age, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+   theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Age Group",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Age",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 ```{r}
@@ -128,7 +138,18 @@ day_visit_demographics %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(marital_status, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Marital Staus",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Marital Status",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 ```{r}
@@ -138,17 +159,42 @@ day_visit_demographics %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(gender, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Gender",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Gender",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 ```{r}
+employed_status <- c("Employed/Self-employed", "Unemployed", "Full/Part time education")
+
 day_visit_demographics %>% 
   filter(employment_status != "All") %>% 
   group_by(employment_status, units) %>% 
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(employment_status, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Employment Status",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Employment Status",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300")) +
+  scale_x_discrete(labels= employed_status)
 ```
 
 ```{r}
@@ -158,7 +204,18 @@ day_visit_demographics %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(children, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Family Status",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Family Status",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 ```{r}
@@ -168,7 +225,18 @@ day_visit_demographics %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(access_to_car, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Access to Car",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Car Accessibility",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 ```{r}
@@ -178,7 +246,18 @@ day_visit_demographics %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(social_grade, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Social Grade",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Social Grade",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 ```{r}
@@ -191,10 +270,16 @@ demographics_long <- day_visit_demographics %>%
 ```{r}
 demographics_long %>% 
   group_by(status, breakdown_of_domestic_tourism) %>% 
+  filter(breakdown_of_domestic_tourism == "Expenditure") %>% 
   summarise(sum = sum(value)) %>% 
   arrange(desc(sum))
 ```
 
+```{r}
+demographic_percent %>% 
+  select(status, percentage) 
+  
+```
 
 
 # Locations of day visits
@@ -218,7 +303,18 @@ day_visit_location %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(type_of_location_visited, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 25, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Location Type",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Location Type",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 
@@ -240,6 +336,7 @@ day_visit_transport %>%
   arrange(desc(million_pounds_gbp))
 ```
 
+
 ## Plot exp/visits by transport
 ```{r}
 day_visit_transport %>% 
@@ -248,7 +345,18 @@ day_visit_transport %>%
   summarise(sum = sum(value)) %>% 
   ggplot() +
   geom_col(aes(x = reorder(method_of_travel, -sum), y = sum, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 65, hjust = 1, vjust = 1))
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Mode of Transport",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure and Visits by Mode of Transport",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
 
 # Regional Tourism
@@ -291,9 +399,20 @@ regional_visits <- location_code %>%
 
 ```{r}
 regional_visits %>% 
+  filter(units == "million pounds (GBP)") %>% 
   ggplot() +
-  geom_col(aes(x = reorder(region_of_residence, -value), y = value, fill = units), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1)) 
+  geom_col(aes(x = reorder(region_of_residence, -value), y = value), fill = "#003300", position = "dodge") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Region of Residence",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure by region of tourist's residence",
+       subtitle = "2013 - 2019")
 ```
 
 ```{r}
@@ -304,7 +423,18 @@ regional_visits %>%
          units == "million pounds (GBP)") %>%
   ggplot() +
   geom_col(aes(x = reorder(area_visited, -value), y = value, fill = region_of_residence), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1)) 
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 55, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Area Visited",
+       y = "Millions",
+       fill = "",
+       title = "Expenditure in Regional Areas by Tourist's Residence",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(values = c("England" = "#B20000", "Scotland" = "#211551"))
 ```
 
 ```{r}
@@ -317,7 +447,18 @@ regional_visits %>%
          units != "million pounds (GBP)") %>%
   ggplot() +
   geom_col(aes(x = reorder(area_visited, -value), y = value, fill = region_of_residence), position = "dodge") +
-  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1)) +
+   theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 55, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Area Visited",
+       y = "Thousands",
+       fill = "",
+       title = "Nights stayed and Visits made to the top Areas visted",
+       subtitle = "2013 - 2019") +
+  scale_fill_manual(values = c("England" = "#B20000", "Scotland" = "#211551"))+
   facet_wrap(units ~ .)
 ```
 
@@ -369,7 +510,7 @@ visits_la_geo %>%
                 legend.position = "bottom",
                 legend.text = element_text(size = "8")) +
            scale_fill_viridis_c(option="viridis") +
-           labs(title = "Expenditure by local area",
+           labs(title = "Expenditure by Area visited",
                subtitle = "2017-2019",
                fill = "GBP in millions")
 ```
@@ -428,28 +569,65 @@ accomm_occupancy%>%
 
 ```{r}
 day_visit_activities %>% 
-  filter( units == "Million Visits") %>% 
   group_by(date_code, units) %>% 
   summarise(sum = sum(value)) %>% 
   ggplot() +
-  geom_line(aes(x = date_code, y = sum, colour = units))
+  geom_line(aes(x = date_code, y = sum, colour = units)) +
+  facet_grid(units ~ .)
 ```
 
 ```{r}
 day_visit_activities %>% 
-  filter( units == "million pounds (GBP)") %>% 
+  filter( units == "million pounds (GBP)",
+          tourism_activity == "All") %>% 
   group_by(date_code, units) %>% 
   summarise(sum = sum(value)) %>% 
   ggplot() +
-  geom_line(aes(x = date_code, y = sum, colour = units))
+  geom_line(aes(x = date_code, y = sum), colour = "#003300") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Year",
+       y = "Millions",
+       fill = "",
+       title = "Domestic Tourist Trends by Expenditure",
+       subtitle = "2013 - 2019") +
+  scale_x_continuous(breaks = c(2013, 2014, 2015, 2016, 2017, 2018, 2019))
 ```
+
+```{r}
+day_visit_activities %>% 
+  filter( units == "Million Visits",
+          tourism_activity == "All") %>% 
+  group_by(date_code, units) %>% 
+  summarise(sum = sum(value)) %>% 
+  ggplot() +
+  geom_line(aes(x = date_code, y = sum), colour = "#B27300") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(face = "bold", angle = 45, hjust = 1, vjust = 1),
+        legend.position = "top",
+        axis.text.y = element_text(face = "bold", angle = 25, size = 10),
+        title =element_text(size=12, face="bold"),
+        axis.title=element_text(size= 12)) +
+  labs(x = "Year",
+       y = "Millions",
+       fill = "",
+       title = "Domestic Tourist Trends by Visits",
+       subtitle = "2013 - 2019") +
+  scale_x_continuous(breaks = c(2013, 2014, 2015, 2016, 2017, 2018, 2019))
+```
+
 
 
 ```{r}
 regional_visits %>% 
   drop_na(area_visited) %>% 
   group_by(date_code) %>% 
-  filter(region_of_residence != "All of GB") %>% 
+  filter(region_of_residence != "All of GB",
+        units == "million pounds (GBP)") %>% 
   mutate(units = fct_reorder(units, desc(value))) %>% 
   ggplot() +
   geom_col(aes(x = date_code, y = value, fill = region_of_residence), position = "dodge") +
