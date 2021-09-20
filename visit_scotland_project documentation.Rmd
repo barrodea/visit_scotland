@@ -1,24 +1,37 @@
 ---
 title: "Visit Scotland project documentation"
 output:
+  word_document:
+    toc: yes
   html_document:
     toc: yes
     toc_float: yes
     df_print: paged
-    css: null
+    css: ../../../styles.css
     pdf_document: default
-  word_document:
-    toc: yes
-  pdf_document:
-    toc: yes
 ---
-
 
 ## Brief description of project topic
 
+#### Overview of Visit Scotland
+
+VisitScotland.com is the official consumer website of VisitScotland, Scotland’s national tourist board.
+Working closely with private businesses, public agencies and local authorities, we work to ensure that our visitors experience the very best of Scotland and that the country makes the most of its outstanding tourism assets and realises its potential.
+
+To do this, VisitScotland:
+
+• markets Scotland to all parts of the world to attract visitors.
+
+• provides information and inspiration to visitors and potential visitors so they get the best out of a visit
+to Scotland.
+
+• provides quality assurance to visitors and quality advice to our industry partners to help the industry
+meet - and strive to exceed - visitors’ expectations.
+
+
 #### Project brief
 
-Provide insights into Scottish Domestic Tourism for the following based on 2013 to 2019 Scot Gov data.
+Provide insights on Scottish Domestic Tourism for the following based on 2013 to 2019 Scot Gov data to Visit Scotland.
 
 Day Visits based on:
  
@@ -38,17 +51,23 @@ Regional Tourism based on:
 
 By analysing the data available I am looking to provide Visit Scotland with key insights into what drives domestic tourism in Scotland and what areas they can focus on to help maximise tourist spending and visits.
 
-#### Overview of Visit Scotland
+#### The insights indentified were as follows:
 
-VisitScotland.com is the official consumer website of VisitScotland, Scotland’s national tourist board.
-Working closely with private businesses, public agencies and local authorities, we work to ensure that our visitors experience the very best of Scotland and that the country makes the most of its outstanding tourism assets and realises its potential.
+Areas visited and Transport:
 
-To do this, VisitScotland:
-• markets Scotland to all parts of the world to attract visitors.
-• provides information and inspiration to visitors and potential visitors so they get the best out of a visit
-to Scotland.
-• provides quality assurance to visitors and quality advice to our industry partners to help the industry
-meet - and strive to exceed - visitors’ expectations.
+For both day visits and regional tourism, the most popular destinations were Scottish cities.
+People with access to cars and spending significantly more than those without a car on day visits and 60% of all visitors are arriving by car.
+Questions: What improvements need to me made to the public transport system in Scotland?
+		       What can be done to roads/transport system to improve accessibility to rural parts of Scotland?
+
+Activities:
+
+Meals and nights out are at the top of income generating activities. Therefore, it is important to get the hospitality sector back up and running as quickly as possible after covid.
+
+Regional Tourists:
+
+Domestic tourism relies heavily on tourists from England. Efforts need to be made to maintain and increase the level of visitors from England. This will be important as international travel is opening up again and people are looking at booking foreign holidays.
+
 
 ## Data
 

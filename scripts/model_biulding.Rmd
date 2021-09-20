@@ -6,6 +6,7 @@ output: html_document
 ---
 ```{r}
 library(tidyverse)
+library(janitor)
 library(modelr)
 library(ggfortify)
 library(GGally)
@@ -20,11 +21,18 @@ library(here)
 
 ## convert the data in to a long version where the variables are converted to columns for category and status
 ```{r}
+day_visit_demographics <- read_csv(here("raw_data/tourism_day_visits_demographics.csv")) %>% 
+  clean_names()
+
+demographics_long <- day_visit_demographics %>% 
+  pivot_longer(cols = c(age:social_grade), names_to = "category", values_to = "status") %>% 
+  filter(status != "All") %>% 
+  arrange(date_code, breakdown_of_domestic_tourism, category)
+
 demographics_long <- day_visit_demographics %>% 
   pivot_longer(cols = c(age:social_grade), names_to = "category", values_to = "status") %>% 
   arrange(date_code, breakdown_of_domestic_tourism, category)
 
-demographics_long 
 ```
 
 ## Add the percentages of visits per category per year
