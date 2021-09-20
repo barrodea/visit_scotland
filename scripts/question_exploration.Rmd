@@ -10,6 +10,8 @@ library(scales)
 library(here)
 ```
 
+
+# Read in and explore the data
 ```{r}
 day_visit_location <- read_csv(here("raw_data/tourism_day_visits_location.csv")) %>% 
   clean_names()
@@ -17,35 +19,18 @@ location_data <- read_csv(here("raw_data/Datazone2011lookup.csv")) %>%
   clean_names()
 regional_domestic_tourism <- read_csv(here("raw_data/regional_domestic_tourism.csv")) %>% 
   clean_names()
+day_visit_activities <- read_csv(here("raw_data/tourism_day_visits_activities.csv")) %>% 
+  clean_names()
+day_visit_demographics <- read_csv(here("raw_data/tourism_day_visits_demographics.csv")) %>% 
+  clean_names()
+day_visit_transport <- read_csv(here("raw_data/tourism_day_visits_transport.csv")) %>% 
+  clean_names()
+accomm_occupancy <- read_csv(here("raw_data/scottish_accomodation_occupancy.csv")) %>% 
+  clean_names()
 ```
 
 
 # Activities: What kind of tourism activity generates the highest income for Scotland? Which kind of activity generates the most visits to sites?
-
-```{r}
-day_visit_activities <- read_csv(here("raw_data/tourism_day_visits_activities.csv")) %>% 
-  clean_names()
-```
-
-## Calculate the amount of expenditure generated and number of visits per activity 2013 - 2019
-```{r}
-activities_totals <- day_visit_activities %>% 
-  group_by(tourism_activity, breakdown_of_domestic_tourism) %>% 
-  summarise(sum = sum(value)) %>% 
-  ungroup()
-
-activities_totals <- activities_totals %>% 
-  pivot_wider(names_from = breakdown_of_domestic_tourism, values_from = sum) %>% 
-  filter(tourism_activity != "All") %>% 
-  mutate(expenditure_percent = round(Expenditure/sum(Expenditure) * 100, 2),
-         visit_percent = round(Visits/sum(Visits) * 100, 2)) %>% 
-  arrange(desc(Expenditure)) %>% 
-  select(1, 2, 4, 3, 5)
-
-activities_totals 
-
-```
-
 
 ## Plot the hightest ranking activities
 
@@ -76,7 +61,6 @@ day_visit_activities %>%
 ```
  ## Plot the highest ranking activities by visits only
 ```{r}
-# not used in presentation
 activity_names_visits <- c("Visit Family or Friends", "Meal Out", "Outdoor Activity", "General day out", "Night Out", "Shopping")
 
 day_visit_activities %>% 
@@ -103,13 +87,7 @@ day_visit_activities %>%
 
 
 # Demographics
-```{r}
-day_visit_demographics <- read_csv(here("raw_data/tourism_day_visits_demographics.csv")) %>% 
-  clean_names()
-```
-
-
-
+## create visualisations for each category in the demographis data
 ```{r}
  day_visit_demographics %>% 
   filter(age != "All") %>% 
@@ -174,6 +152,7 @@ day_visit_demographics %>%
 ```
 
 ```{r}
+# create list of employment status 
 employed_status <- c("Employed/Self-employed", "Unemployed", "Full/Part time education")
 
 day_visit_demographics %>% 
@@ -259,7 +238,7 @@ day_visit_demographics %>%
        subtitle = "2013 - 2019") +
   scale_fill_manual(labels = c("Pounds (GBP)", "Visits"), values = c("million pounds (GBP)" = "#003300", "Million Visits" = "#B27300"))
 ```
-
+## change the dataframe to a longer version so that totals for each subcategory can be calculated
 ```{r}
 demographics_long <- day_visit_demographics %>% 
   pivot_longer(cols = c(age:social_grade), names_to = "category", values_to = "status") %>% 
@@ -267,19 +246,15 @@ demographics_long <- day_visit_demographics %>%
   arrange(date_code, breakdown_of_domestic_tourism, category)
 ```
 
+# calculate totals of expenditure for each subcategory
 ```{r}
-demographics_long %>% 
+demograhics_exp_total <- demographics_long %>% 
   group_by(status, breakdown_of_domestic_tourism) %>% 
   filter(breakdown_of_domestic_tourism == "Expenditure") %>% 
   summarise(sum = sum(value)) %>% 
   arrange(desc(sum))
 ```
 
-```{r}
-demographic_percent %>% 
-  select(status, percentage) 
-  
-```
 
 
 # Locations of day visits
@@ -319,12 +294,6 @@ day_visit_location %>%
 
 
 # Transport
-```{r}
-day_visit_transport <- read_csv(here("raw_data/tourism_day_visits_transport.csv")) %>% 
-  clean_names()
-
-```
-
 
 ## create a summary of exp/visits by transport
 ```{r}
@@ -368,9 +337,9 @@ regional_domestic_tourism %>%
   distinct(feature_code)
 ```
 
-
+# summarise the data, taking out the feature_code for all of Scotland
 ```{r}
-regional_domestic_tourism %>% 
+regional_summary <- regional_domestic_tourism %>% 
   filter(feature_code != "S92000003") %>% 
   group_by(region_of_residence ,units) %>% 
   summarise(sum = sum(value))
@@ -396,7 +365,7 @@ regional_visits <- location_code %>%
 ```
 
 
-
+## create graph for total expenditure by region of residence
 ```{r}
 regional_visits %>% 
   filter(units == "million pounds (GBP)") %>% 
@@ -414,7 +383,7 @@ regional_visits %>%
        title = "Expenditure by region of tourist's residence",
        subtitle = "2013 - 2019")
 ```
-
+## create graph for total expenditure by region of residence and area visited
 ```{r}
 regional_visits %>% 
   drop_na(area_visited) %>% 
@@ -436,7 +405,7 @@ regional_visits %>%
        subtitle = "2013 - 2019") +
   scale_fill_manual(values = c("England" = "#B20000", "Scotland" = "#211551"))
 ```
-
+## create graph for total nights stayed and visits by region of residence for top areas visited
 ```{r}
 
 regional_visits %>% 
@@ -462,8 +431,7 @@ regional_visits %>%
   facet_wrap(units ~ .)
 ```
 
-
-
+## create graph for total expenditure by region of residence and area visited
 ```{r}
 regional_visits %>% 
   drop_na(area_visited) %>% 
@@ -478,7 +446,7 @@ regional_visits %>%
 
 
 #Geospacial
-
+## create a heat map for expeniture by are visited
 ```{r}
 library(sf)
 
@@ -488,7 +456,7 @@ la_zones <- st_read(here::here("raw_data/Local_Authority_Boundaries_-_Scotland/p
 ```
 
 ```{r}
-#use merge health data to shape file
+#use merge visitor data to shape file
 visits_la_geo <- la_zones %>%
   merge(regional_visits, by.x = "code", by.y = "feature_code", all = TRUE)
 ```
@@ -515,11 +483,6 @@ visits_la_geo %>%
                fill = "GBP in millions")
 ```
 # Accomodation
-```{r}
-accomm_occupancy <- read_csv(here("raw_data/scottish_accomodation_occupancy.csv")) %>% 
-  clean_names()
-
-```
 
 ```{r}
 accomm_occupancy %>% 
@@ -566,7 +529,7 @@ accomm_occupancy%>%
 
 
 # Trends
-
+## create visualisations to look at trends over years for day visits
 ```{r}
 day_visit_activities %>% 
   group_by(date_code, units) %>% 
@@ -621,7 +584,7 @@ day_visit_activities %>%
 ```
 
 
-
+## create visualisations to look at trends over years for regional visits
 ```{r}
 regional_visits %>% 
   drop_na(area_visited) %>% 
@@ -635,21 +598,4 @@ regional_visits %>%
 ```
 
 
-```{r}
-regional_visits %>% 
-   filter( units == "Thousand Visits") %>% 
-  group_by(date_code, units) %>% 
-  summarise(sum = sum(value)) %>% 
-  ggplot() +
-  geom_col(aes(x = date_code, y = sum))
-```
-
-```{r}
-regional_visits %>% 
-   filter( units == "million pounds (GBP)") %>% 
-  group_by(date_code, units) %>% 
-  summarise(sum = sum(value)) %>% 
-  ggplot() +
-  geom_col(aes(x = date_code, y = sum))
-```
 

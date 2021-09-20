@@ -8,9 +8,9 @@ output: html_document
 library(tidyverse)
 library(modelr)
 library(ggfortify)
-# visualisation packages
 library(GGally)
 library(here)
+
 ```
 
 
@@ -69,10 +69,6 @@ demographics_model_data <- demographics_wide %>%
   clean_names()
   
 write_csv(demographics_model_data, here("demographics_table.csv"))
-```
-
-```{r}
-here()
 ```
 
 
@@ -134,6 +130,18 @@ autoplot(model1)
 
 
 ## Access to cars was the best predictor so now we look for the second best predictor
+
+
+```{r}
+demographics_remaining_resid <- demographics_model_subset %>%
+  add_residuals(model1) %>%
+  select(-c(total_visits, access_to_car_access_to_car_1))
+
+demographics_remaining_resid %>% 
+  ggpairs()
+```
+
+
 ```{r}
 model2a <- lm(total_visits ~ access_to_car_access_to_car_1 + marital_status_married, data = demographics_model_subset)
 summary(model2a)
@@ -147,6 +155,16 @@ summary(model2b)
 ```
  - best 2nd predictor is the marital status. Percentage explained goes up to 83% and it is close to the significance threshold. 
 
+
+```{r}
+demographics_remaining_resid <- demographics_model_subset %>%
+  add_residuals(model2a) %>%
+  select(-c(total_visits, access_to_car_access_to_car_1, marital_status_married))
+
+demographics_remaining_resid %>% 
+  ggpairs()
+```
+
 ```{r}
 model3a <- lm(total_visits ~ access_to_car_access_to_car_1 + marital_status_married + employment_status_in_full_or_part_time_education, data = demographics_model_subset)
 summary(model3a)
@@ -155,7 +173,6 @@ summary(model3a)
  - here the explained percentage goes up to 94% but the p_value is not significant. This may now be getting into the area of over-fitting the data and I will stop here
 
 ```{r}
-library(ggfortify)
 autoplot(model3a)
 ```
 
