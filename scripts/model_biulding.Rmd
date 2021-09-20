@@ -10,6 +10,7 @@ library(modelr)
 library(ggfortify)
 # visualisation packages
 library(GGally)
+library(here)
 ```
 
 
@@ -66,7 +67,14 @@ total_visits <- day_visit_demographics %>%
 demographics_model_data <- demographics_wide %>% 
   left_join(total_visits, "date_code") %>% 
   clean_names()
+  
+write_csv(demographics_model_data, here("demographics_table.csv"))
 ```
+
+```{r}
+here()
+```
+
 
 ## look at the correlations between the data and the response of number of visits
 ```{r}

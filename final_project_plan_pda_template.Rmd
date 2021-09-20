@@ -1,0 +1,125 @@
+---
+title: "Visit Scotland project documentation"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    df_print: paged
+    css: null
+    pdf_document: default
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+
+## Brief description of project topic
+
+#### Project brief
+
+Provide insights into Scottish Domestic Tourism for the following based on 2013 to 2019 Scot Gov data.
+
+Day Visits based on:
+ 
+ - Activities
+ 
+ - Demographics
+ 
+ - Location Type
+ 
+ - Transportation
+
+Regional Tourism based on:
+
+ - Areas visited
+ 
+ - Tourist’s residency
+
+By analysing the data available I am looking to provide Visit Scotland with key insights into what drives domestic tourism in Scotland and what areas they can focus on to help maximise tourist spending and visits.
+
+#### Overview of Visit Scotland
+
+VisitScotland.com is the official consumer website of VisitScotland, Scotland’s national tourist board.
+Working closely with private businesses, public agencies and local authorities, we work to ensure that our visitors experience the very best of Scotland and that the country makes the most of its outstanding tourism assets and realises its potential.
+
+To do this, VisitScotland:
+• markets Scotland to all parts of the world to attract visitors.
+• provides information and inspiration to visitors and potential visitors so they get the best out of a visit
+to Scotland.
+• provides quality assurance to visitors and quality advice to our industry partners to help the industry
+meet - and strive to exceed - visitors’ expectations.
+
+## Data
+
+#### Data sources
+
+All of the following data was sourced from the scot gov statistics site .
+
+Regional Domestic Tourism Scottish 
+Accomodation Occupancy Tourism 
+Day Visits - Activities Tourism 
+Day Visits - Demographics Tourism 
+Day Visits - Location Tourism 
+Day Visits - Transport
+
+#### Types of data
+
+The data provided was in the following forms:
+
+Categorical - characters
+
+Numeric - doubles
+
+#### Data formats
+
+The data come was all downloaded in flat files (CSV) format.
+
+#### Data quality and bias
+
+Looking at the About tab for the datasets on Scottish Gov Survey data, the data quality control measures for the data included regular quality control checks at each stage of the survey. These included checks for the sampling design, selection of sampling methods, design of the questionnaire, how the survey was delivered, how the data was collected, entered and cleaned.
+The survey dataset may be biased because of the small sample size for some of the categories that the data was gathered for.
+
+## Ethics
+
+#### Ethical issues in data sourcing and extraction
+
+There are no obvious ethical considerations, because the data does not identify particular individuals and their health details.
+
+#### Ethical implications of business requirements
+
+The datasets are covered by the Open Government License, which means the data can be used for private analysis by members of the public, but should not be reproduced for commercial gain.
+
+## Analysis
+
+#### Stages in the data analysis process
+
+1. Planning 
+2. Data collection
+3. Choosing datasets
+4. Cleaning the data
+5. Exploratory data analysis
+6. Creating basic visualisations and graph selection
+7. Creating a predictive model
+8. Fine tuning the aesthetics elements of visualisations and content
+9. Documenting and presenting our findings
+
+#### Tools for data analysis
+
+● Trello (planning & daily checkins)
+
+● Git/GitHub (version control)
+
+● R (data-cleaning and wrangling)
+
+● Microsoft Powerpoint (presentation)
+
+#### Descriptive, diagnostic, predictive and prescriptive analysis
+
+
+The following methods were used for the analysis
+
+ - Descriptive Analytics: The data from past years (2013 - 2019) was analysed to gain insights into what elements of tourism has generated most income and visits in this period.
+ 
+  - Predictive Analytics: A model was created from the past data to help identify was demographic categories are likely to lead to higher income and visits in the future.
+ 
