@@ -1,14 +1,8 @@
 ---
-title: "Visit Scotland project documentation"
-output:
-  word_document:
-    toc: yes
-  html_document:
-    toc: yes
-    toc_float: yes
-    df_print: paged
-    css: ../../../styles.css
-    pdf_document: default
+title: "Visit Scotland Project Documentation"
+author: "Barry OnDea"
+date: "22/09/2021"
+output: html_document
 ---
 
 ## Brief description of project topic
