@@ -470,7 +470,7 @@ visits_la_geo %>%
           drop_na(area_visited) %>% 
           filter(region_of_residence != "All of GB",
                  units == "million pounds (GBP)",
-                 date_code == "2017-2019")%>% 
+                 date_code %in% c("2014-2106", "2017-2019")) %>% 
           ggplot() +
           geom_sf(aes(fill = value), colour = "black") +
           theme(axis.text.x = element_text(face = "bold", size = 10),
@@ -481,7 +481,7 @@ visits_la_geo %>%
                 legend.text = element_text(size = "8")) +
            scale_fill_viridis_c(option="viridis") +
            labs(title = "Expenditure by Area visited",
-               subtitle = "2017-2019",
+               subtitle = "2014-2019",
                fill = "GBP in millions")
 ```
 # Accomodation
