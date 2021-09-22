@@ -389,7 +389,8 @@ regional_visits %>%
   drop_na(area_visited) %>% 
   group_by(area_visited) %>% 
   filter(region_of_residence != "All of GB",
-         units == "million pounds (GBP)") %>%
+         units == "million pounds (GBP)",
+         date_code %in% c("2014-2016", "2017-2019")) %>%
   ggplot() +
   geom_col(aes(x = reorder(area_visited, -value), y = value, fill = region_of_residence), position = "dodge") +
   theme_minimal() +
@@ -402,7 +403,7 @@ regional_visits %>%
        y = "Millions",
        fill = "",
        title = "Expenditure in Regional Areas by Tourist's Residence",
-       subtitle = "2013 - 2019") +
+       subtitle = "2014 - 2019") +
   scale_fill_manual(values = c("England" = "#B20000", "Scotland" = "#211551"))
 ```
 ## create graph for total nights stayed and visits by region of residence for top areas visited
@@ -413,7 +414,8 @@ regional_visits %>%
   group_by(area_visited) %>% 
   filter(region_of_residence != "All of GB",
          area_visited %in% c("City of Edinburgh", "Glasgow City", "Dumfries and Galloway", "Highland", "Argyle and Bute", "Perth and Kinross"),
-         units != "million pounds (GBP)") %>%
+         units != "million pounds (GBP)",
+         date_code %in% c("2014-2016", "2017-2019")) %>%
   ggplot() +
   geom_col(aes(x = reorder(area_visited, -value), y = value, fill = region_of_residence), position = "dodge") +
    theme_minimal() +
@@ -426,7 +428,7 @@ regional_visits %>%
        y = "Thousands",
        fill = "",
        title = "Nights stayed and Visits made to the top Areas visted",
-       subtitle = "2013 - 2019") +
+       subtitle = "2014 - 2019") +
   scale_fill_manual(values = c("England" = "#B20000", "Scotland" = "#211551"))+
   facet_wrap(units ~ .)
 ```
